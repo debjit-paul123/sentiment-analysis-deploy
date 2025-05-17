@@ -1,0 +1,119 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Styling the container */
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 2.5em;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Heading Style */
+.container h1 {
+    font-size: 2em;
+    color: #444;
+    margin-bottom: 1.5em;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 1.1em;
+    margin-bottom: 0.8em;
+    color: #666;
+    text-align: left;
+    font-weight: 500;
+}
+
+input[type="file"] {
+    margin-bottom: 1.2em;
+    padding: 0.6em;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="file"]:hover {
+    border-color: #2193b0;
+    box-shadow: 0 0 8px rgba(33, 147, 176, 0.2);
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border-color: #2193b0;
+    box-shadow: 0 0 8px rgba(33, 147, 176, 0.4);
+}
+
+/* Button Styling */
+button {
+    padding: 0.9em;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #2193b0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #1b7a91;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(33, 147, 176, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+    }
+
+    input[type="file"], button {
+        font-size: 1em;
+    }
+
+    .container h1 {
+        font-size: 1.8em;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
