@@ -1,0 +1,10 @@
+flask
+googletrans==4.0.0-rc1
+langdetect
+emoji
+textblob
+pandas
+scikit-learn
+joblib
+transformers
+torch
