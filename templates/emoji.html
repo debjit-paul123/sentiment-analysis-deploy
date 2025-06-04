@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Sentiment Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+            margin-top: 20px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .results p{
+            margin: 10px;
+            font-size: medium;
+            text-transform: capitalize;
+        }
+
+        .results h3 {
+            color: #444;
+            font-size: 1.5rem;
+        }
+
+        .emoji-analysis {
+            margin-top: 15px;
+        }
+
+        .emoji-item {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .emoji-item span {
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            textarea {
+                height: 100px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .results {
+                padding: 15px;
+            }
+
+            .emoji-item {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            button {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .results h3 {
+                font-size: 1.3rem;
+            }
+
+            .emoji-item {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emoji Sentiment Analysis</h1>
+        <form id="analysisForm">
+            <textarea id="textInput" placeholder="Enter your text with emojis here..."></textarea>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
+        <div id="results" class="results" style="display: none;">
+            <h3>Sentiment Analysis Results</h3>
+            <p><strong>Input Text:</strong> <span id="inputText"></span></p>
+            <p><strong>Overall Text Sentiment:</strong> <span id="textSentiment"></span></p>
+            <p><strong>Confidence:</strong> <span id="textPolarity"></span><strong>%</strong></p>
+            <div class="emoji-analysis">
+                <h4>Emoji Sentiment Analysis:</h4>
+                <div id="emojiAnalysis"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('analysisForm');
+        const textInput = document.getElementById('textInput');
+        const resultsDiv = document.getElementById('results');
+        const inputTextSpan = document.getElementById('inputText');
+        const textSentimentSpan = document.getElementById('textSentiment');
+        const textPolaritySpan = document.getElementById('textPolarity');
+        const emojiAnalysisDiv = document.getElementById('emojiAnalysis');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear previous results
+            resultsDiv.style.display = 'none';
+            emojiAnalysisDiv.innerHTML = '';
+
+            const text = textInput.value.trim();
+            if (!text) {
+                alert('Please enter some text to analyze.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text }),
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Populate results
+                    resultsDiv.style.display = 'block';
+                    inputTextSpan.textContent = data.input_text || 'N/A';
+                    textSentimentSpan.textContent = data.text_sentiment || 'N/A';
+                    textPolaritySpan.textContent = data.text_polarity || 'N/A';
+
+                    if (data.emoji_analysis && data.emoji_analysis.length > 0) {
+                        data.emoji_analysis.forEach((emojiResult) => {
+                            const emojiItem = document.createElement('p');
+                            emojiItem.className = 'emoji-item';
+
+                            if (emojiResult.error) {
+                                emojiItem.textContent = emojiResult.error;
+                            } else {
+                                emojiItem.innerHTML = `<span>${emojiResult.emoji}</span>: ${emojiResult.sentiment}`;
+                            }
+
+                            emojiAnalysisDiv.appendChild(emojiItem);
+                        });
+                    }
+                } else {
+                    alert(data.error || 'An error occurred during the analysis.');
+                }
+            } catch (error) {
+                alert('Failed to connect to the server.');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
